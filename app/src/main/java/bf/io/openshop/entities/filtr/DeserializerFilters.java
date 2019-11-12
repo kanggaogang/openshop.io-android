@@ -39,35 +39,39 @@ public class DeserializerFilters implements JsonDeserializer<Filters> {
                     JsonObject jObject = (JsonObject) jElement;
                     if (jObject.has(TAG_TYPE)) {
                         String type = jObject.get(TAG_TYPE).getAsString();
-                        if (FILTER_TYPE_COLOR.equals(type)) {
-                            final FilterTypeColor filterTypeColor = new FilterTypeColor();
-                            filterTypeColor.setType(FILTER_TYPE_COLOR);
-                            parseGeneralFields(jObject, filterTypeColor);
-                            filterTypeColor.setValues(parseTypeValues(FilterValueColor.class, jObject, context));
-                            if (filterTypeColor.getValues() != null) {
-                                filterList.add(filterTypeColor);
-                            }
-                        } else if (FILTER_TYPE_SELECT.equals(type)) {
-                            final FilterTypeSelect filterTypeSelect = new FilterTypeSelect();
-                            filterTypeSelect.setType(FILTER_TYPE_SELECT);
-                            parseGeneralFields(jObject, filterTypeSelect);
-                            filterTypeSelect.setValues(parseTypeValues(FilterValueSelect.class, jObject, context));
-                            if (filterTypeSelect.getValues() != null) {
-                                filterList.add(filterTypeSelect);
-                            }
-                        } else if (FILTER_TYPE_RANGE.equals(type)) {
-                            final FilterTypeRange filterTypeRange = new FilterTypeRange();
-                            filterTypeRange.setType(FILTER_TYPE_RANGE);
-                            parseGeneralFields(jObject, filterTypeRange);
-                            if (jObject.has(TAG_VALUES)) {
-                                JsonArray rangeValues = jObject.get(TAG_VALUES).getAsJsonArray();
-                                if (rangeValues != null && rangeValues.size() == 3) {
-                                    filterTypeRange.setMin(rangeValues.get(0).getAsInt());
-                                    filterTypeRange.setMax(rangeValues.get(1).getAsInt());
-                                    filterTypeRange.setRangeTitle(rangeValues.get(2).getAsString());
+                        switch (type) {
+                            case FILTER_TYPE_COLOR:
+                                final FilterTypeColor filterTypeColor = new FilterTypeColor();
+                                filterTypeColor.setType(FILTER_TYPE_COLOR);
+                                parseGeneralFields(jObject, filterTypeColor);
+                                filterTypeColor.setValues(parseTypeValues(FilterValueColor.class, jObject, context));
+                                if (filterTypeColor.getValues() != null) {
+                                    filterList.add(filterTypeColor);
                                 }
-                            }
-                            filterList.add(filterTypeRange);
+                                break;
+                            case FILTER_TYPE_SELECT:
+                                final FilterTypeSelect filterTypeSelect = new FilterTypeSelect();
+                                filterTypeSelect.setType(FILTER_TYPE_SELECT);
+                                parseGeneralFields(jObject, filterTypeSelect);
+                                filterTypeSelect.setValues(parseTypeValues(FilterValueSelect.class, jObject, context));
+                                if (filterTypeSelect.getValues() != null) {
+                                    filterList.add(filterTypeSelect);
+                                }
+                                break;
+                            case FILTER_TYPE_RANGE:
+                                final FilterTypeRange filterTypeRange = new FilterTypeRange();
+                                filterTypeRange.setType(FILTER_TYPE_RANGE);
+                                parseGeneralFields(jObject, filterTypeRange);
+                                if (jObject.has(TAG_VALUES)) {
+                                    JsonArray rangeValues = jObject.get(TAG_VALUES).getAsJsonArray();
+                                    if (rangeValues != null && rangeValues.size() == 3) {
+                                        filterTypeRange.setMin(rangeValues.get(0).getAsInt());
+                                        filterTypeRange.setMax(rangeValues.get(1).getAsInt());
+                                        filterTypeRange.setRangeTitle(rangeValues.get(2).getAsString());
+                                    }
+                                }
+                                filterList.add(filterTypeRange);
+                                break;
                         }
                     }
                 }
@@ -82,8 +86,8 @@ public class DeserializerFilters implements JsonDeserializer<Filters> {
     /**
      * Parse ID and NAME for a type of filter.
      *
-     * @param jObject
-     * @param filterType
+     * @param jObject object which will be parsed
+     * @param filterType filter object where values will be set
      */
     private void parseGeneralFields(JsonObject jObject, FilterType filterType) {
         if (jObject.has(TAG_ID))
@@ -95,7 +99,7 @@ public class DeserializerFilters implements JsonDeserializer<Filters> {
     }
 
 
-    private <T extends Object> List<T> parseTypeValues(Class<T> type, JsonObject jObject, JsonDeserializationContext context) {
+    private <T> List<T> parseTypeValues(Class<T> type, JsonObject jObject, JsonDeserializationContext context) {
         List<T> values = null;
         if (jObject.has(TAG_VALUES)) {
             JsonArray valuesArray = jObject.get(TAG_VALUES).getAsJsonArray();

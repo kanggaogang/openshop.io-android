@@ -83,6 +83,7 @@ public class MyApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
+            Timber.d("Here should come error reporting library initialization and connection.", TAG);
             // TODO example of implementation custom crash reporting solution -  Crashlytics.
 //            Fabric.with(this, new Crashlytics());
 //            Timber.plant(new CrashReportingTree());
@@ -113,13 +114,19 @@ public class MyApplication extends Application {
      */
     public boolean isDataConnected() {
         ConnectivityManager connectMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectMan.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (connectMan != null) {
+            activeNetworkInfo = connectMan.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     public boolean isWiFiConnection() {
         ConnectivityManager connectMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectMan.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (connectMan != null) {
+            activeNetworkInfo = connectMan.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 

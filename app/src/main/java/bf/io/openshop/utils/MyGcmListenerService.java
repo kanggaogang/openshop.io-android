@@ -21,7 +21,7 @@ import java.net.URL;
 import bf.io.openshop.BuildConfig;
 import bf.io.openshop.R;
 import bf.io.openshop.api.EndPoints;
-import bf.io.openshop.ux.SplashActivity;
+import bf.io.openshop.UX.SplashActivity;
 import timber.log.Timber;
 
 public class MyGcmListenerService extends GcmListenerService {
@@ -51,16 +51,16 @@ public class MyGcmListenerService extends GcmListenerService {
 //            // normal downstream message.
 //        }
 
-        /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
+        /*
+          Production applications would usually process the message here.
+          Eg: - Syncing with server.
+              - Store message in local database.
+              - Update UI.
          */
 
-        /**
-         * In some cases it may be useful to show a notification indicating to the user
-         * that a message was received.
+        /*
+          In some cases it may be useful to show a notification indicating to the user
+          that a message was received.
          */
         sendNotification(data);
     }
